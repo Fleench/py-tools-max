@@ -96,9 +96,11 @@ Description:
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button press events."""
         if event.button.id == "launch-button" and self.selected_project:
-            # Use the directory name for the UI file path to avoid case issues
             project_dir_name = self.selected_project["dir_name"]
-            ui_file = f"ui/textual/{project_dir_name}_ui.py"
+
+            # Construct absolute path to the UI file
+            script_dir = os.path.dirname(os.path.realpath(__file__))
+            ui_file = os.path.join(script_dir, f"{project_dir_name.lower()}_ui.py")
 
             if os.path.exists(ui_file):
                 self.suspend_process()
