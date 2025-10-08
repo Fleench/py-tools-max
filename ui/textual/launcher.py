@@ -19,7 +19,10 @@ class ProjectLauncher(App):
     def find_projects(self):
         """Finds projects in the 'projects' directory."""
         projects = []
-        project_dir = "projects"
+        # Construct a path to the 'projects' directory relative to this script's location
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        project_dir = os.path.abspath(os.path.join(script_dir, "..", "..", "projects"))
+
         if not os.path.exists(project_dir):
             return []
         for project_name in os.listdir(project_dir):
