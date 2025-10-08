@@ -12,6 +12,15 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 from projects.tasklist.core import make_task, basic_report, procrastination_report, get_today
 from projects.tasklist.data import tasks as initial_tasks, availability as initial_availability
 
+
+class TaskListItem(ListItem):
+    """A ListItem that holds task data."""
+
+    def __init__(self, task: dict) -> None:
+        super().__init__(Static(task["name"]))
+        self.task_data = task
+
+
 class TasklistApp(App):
     """A Textual app to manage tasks."""
 
@@ -86,14 +95,12 @@ class TasklistApp(App):
         list_view = self.query_one("#task-list", ListView)
         list_view.clear()
         for task in self.tasks:
-            # Using a custom ListItem to store the task object could be another way
-            list_view.append(ListItem(Static(task['name'])))
+            list_view.append(TaskListItem(task))
 
     def on_list_view_selected(self, event: ListView.Selected):
         """Display task details when a task is selected."""
-        selected_index = event.list_view.index
-        if selected_index is not None and 0 <= selected_index < len(self.tasks):
-            self.selected_task = self.tasks[selected_index]
+        if isinstance(event.item, TaskListItem):
+            self.selected_task = event.item.task_data
             due_date_str = self.selected_task['due_date'].strftime('%Y-%m-%d')
             details = f"""
 Name: {self.selected_task['name']}
