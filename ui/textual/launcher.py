@@ -93,7 +93,7 @@ Description:
         self.query_one("#project-details").update(details)
         self.query_one("#launch-button").disabled = False
 
-    def on_button_pressed(self, event: Button.Pressed) -> None:
+    async def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button press events."""
         if event.button.id == "launch-button" and self.selected_project:
             project_dir_name = self.selected_project["dir_name"]
@@ -103,22 +103,20 @@ Description:
             ui_file = os.path.join(script_dir, f"{project_dir_name.lower()}_ui.py")
 
             if os.path.exists(ui_file):
-                self.suspend_process()
-                try:
-                    # Use subprocess.run and capture output
-                    result = subprocess.run(
-                        [sys.executable, ui_file],
-                        check=True,
-                        capture_output=True,
-                        text=True
-                    )
-                except subprocess.CalledProcessError as e:
-                    # Display the captured stderr for better debugging
-                    error_message = f"Error running '{project_dir_name}':\n{e.stderr}"
-                    self.query_one("#project-details").update(error_message)
-                    self.query_one("#launch-button").disabled = True
-                finally:
-                    self.resume_process()
+                with self.suspend():
+                    try:
+                        # Use subprocess.run and capture output
+                        result = subprocess.run(
+                            [sys.executable, ui_file],
+                            check=True,
+                            capture_output=True,
+                            text=True
+                        )
+                    except subprocess.CalledProcessError as e:
+                        # Display the captured stderr for better debugging
+                        error_message = f"Error running '{project_dir_name}':\n{e.stderr}"
+                        self.query_one("#project-details").update(error_message)
+                        self.query_one("#launch-button").disabled = True
             else:
                 self.query_one("#project-details").update(f"Error: UI file not found for '{project_dir_name}'")
                 self.query_one("#launch-button").disabled = True
