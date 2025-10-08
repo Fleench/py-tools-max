@@ -1,0 +1,5 @@
+{
+  "name": "pointsys",
+  "version": "1.0.0",
+  "description": "A command-line tool for managing a points-based reward system. It allows users to create accounts, add points, redeem rewards, and view transaction logs."
+}
