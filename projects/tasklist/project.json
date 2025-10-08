@@ -1,0 +1,5 @@
+{
+  "name": "tasklist",
+  "version": "1.0.0",
+  "description": "A command-line tool to manage tasks and generate a procrastination report to determine if tasks can be delayed."
+}
