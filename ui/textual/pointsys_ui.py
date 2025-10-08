@@ -140,7 +140,7 @@ class AccountScreen(Screen):
                 with Vertical(classes="action-group"):
                     yield Static("[bold]Add Points[/bold]")
                     yield Input(placeholder="Reason (e.g., 'Worked out')", id="add_reason")
-                    yield Input(placeholder="Value (e.g., '$10', '30m')", id="add_value")
+                    yield Input(placeholder="Number of points", id="add_value", type="number")
                     yield Button("Add Points", id="add_points_button")
 
                 with Vertical(classes="action-group"):
@@ -177,10 +177,20 @@ class AccountScreen(Screen):
         if event.button.id == "add_points_button":
             reason = self.query_one("#add_reason").value
             value_str = self.query_one("#add_value").value
-            points, error = core.parse_value_string(value_str)
-            if error:
-                self.set_status(f"Error: {error}", "error")
+
+            if not reason:
+                self.set_status("Error: Reason cannot be empty.", "error")
                 return
+
+            try:
+                points = int(value_str)
+                if points <= 0:
+                    self.set_status("Error: Please enter a positive number for points.", "error")
+                    return
+            except (ValueError, TypeError):
+                self.set_status("Error: Invalid input. Please enter a whole number for points.", "error")
+                return
+
             core.add_points(self.parent.files, points, reason)
             self.update_points()
             self.update_logs()
