@@ -84,7 +84,7 @@ class LoginScreen(Screen):
                 else:
                     core.rollback_session(self.parent.files)
                 core.start_session(self.parent.files)
-                self.app.push_screen(AccountScreen())
+                self.app.push_screen("account")
 
             if core.has_crashed(account_name):
                 self.app.push_screen(
@@ -93,7 +93,7 @@ class LoginScreen(Screen):
                 )
             else:
                 core.start_session(self.parent.files)
-                self.app.push_screen(AccountScreen())
+                self.app.push_screen("account")
 
 class AccountScreen(Screen):
     """Screen for managing an account."""
@@ -234,7 +234,7 @@ class PointSysApp(App):
         width: 100%;
     }
     """
-    SCREENS = {"login": LoginScreen(), "account": AccountScreen()}
+    SCREENS = {"login": LoginScreen, "account": AccountScreen}
 
     account_name = None
     files = None
