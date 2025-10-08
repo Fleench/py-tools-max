@@ -1,5 +1,5 @@
 import datetime
-from core import make_task as task, make_day as day
+from projects.tasklist.core import make_task as task, make_day as day
 
 
 tasks = [

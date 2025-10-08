@@ -5,7 +5,8 @@ import re
 import shutil
 
 # --- Configuration ---
-DATA_DIR = "data"
+CORE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(CORE_DIR, "data")
 LAST_ACCOUNT_FILE = os.path.join(DATA_DIR, "last_account.txt")
 
 # Conversion rates for reward calculation
